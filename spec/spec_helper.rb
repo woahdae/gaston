@@ -21,8 +21,8 @@ module Gaston
       class << self
         # We do it this way so we can mock find and not worry about
         # the block
-        def find_in_batches(*args)
-          yield self.find
+        def find_each(*args)
+          self.find(:all, *args).each {|res| yield res}
         end
 
         def all

@@ -7,10 +7,8 @@ module Gaston
         idx = ferret_index(true)
         with_ferret_index(idx) do |f_idx|
           indexed_classes.each do |clazz|
-            clazz.find_in_batches do |objects|
-              objects.each do |row|
-                f_idx << make_document(row)
-              end
+            clazz.find_each(@finder_options[clazz.name]) do |record|
+              f_idx << make_document(record)
             end
           end
           f_idx.optimize
@@ -28,7 +26,7 @@ module Gaston
         return SearchResults.new(0, results) if results.empty?
 
         clazz = classname.constantize
-        options.merge!( 
+        options = @finder_options[classname].merge(options).merge( 
           :order => "#{clazz.primary_key}=#{results.reverse.join(", #{clazz.primary_key}=")}",
           :conditions => { clazz.primary_key => results } )
         objs = clazz.find(:all, options)
@@ -55,10 +53,15 @@ module Gaston
           end
         end
       end
+      
+      def finder_options(classname, options_hash)
+        @finder_options[classname] = options_hash
+      end
 
       def initialize(client)
         @client = client
         @fields = Hash.new { |h, k| h[k] = [] }
+        @finder_options = Hash.new { |h, k| h[k] = {} }
         @indexed_classes = []
       end
 

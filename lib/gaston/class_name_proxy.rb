@@ -9,6 +9,10 @@ module Gaston
       @index.fields(@classname, field_list)
     end
 
+    def finder_options(options_hash)
+      @index.finder_options(@classname, options_hash)
+    end
+
     def ==(other)
       self.eql?(other) || @index == (other)
     end
