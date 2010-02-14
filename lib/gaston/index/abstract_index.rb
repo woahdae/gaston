@@ -29,7 +29,7 @@ module Gaston
 
         clazz = classname.constantize
         options.merge!( 
-          :order => "field(#{clazz.primary_key},#{results.join(',')})", 
+          :order => "#{clazz.primary_key}=#{results.reverse.join(", #{clazz.primary_key}=")}",
           :conditions => { clazz.primary_key => results } )
         objs = clazz.find(:all, options)
         SearchResults.new(results.size, objs)
