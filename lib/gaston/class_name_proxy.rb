@@ -5,7 +5,7 @@ module Gaston
       @classname = classname
     end 
 
-    def fields(field_list)
+    def fields(*field_list)
       @index.fields(@classname, field_list)
     end
 

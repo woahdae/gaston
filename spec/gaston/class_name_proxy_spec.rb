@@ -15,7 +15,7 @@ module Gaston
       proxy = ClassNameProxy.new(index, "Record")
       
       index.should_receive(:fields).with("Record", [:name, :category_name])
-      proxy.fields [:name, :category_name]
+      proxy.fields :name, :category_name
     end
 
     it "is == with the wrapped index class" do

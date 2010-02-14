@@ -23,7 +23,7 @@ module Gaston
       it "registers the fields with the index" do
         @index.should_receive(:fields).with(anything, array_including([:name, :type]))
         Doc.define_index do |index|
-          index.fields [:name, :type]
+          index.fields :name, :type
         end
       end
     end
