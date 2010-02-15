@@ -18,6 +18,8 @@ module Gaston
       end
       
       def ferret_search(query, use_proxy = false)
+        return [] if query.blank?
+        
         results = []
         with_ferret_index do |f_idx|
           f_idx.search_each(query, :limit => 500) do |doc_id, score|
