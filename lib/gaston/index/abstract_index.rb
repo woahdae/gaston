@@ -21,7 +21,7 @@ module Gaston
         results = []
         with_ferret_index do |f_idx|
           f_idx.search_each(query, :limit => 500) do |doc_id, score|
-            if use_proxy?
+            if use_proxy
               results << DocumentProxy.new(f_idx[doc_id])
             else
               results << f_idx[doc_id][:id]
