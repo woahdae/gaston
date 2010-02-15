@@ -16,15 +16,23 @@ module Gaston
           f_idx.optimize
         end
       end
-
-      def search(classname, query, options = {})
+      
+      def ferret_search(query, use_proxy = false)
         results = []
         with_ferret_index do |f_idx|
           f_idx.search_each(query, :limit => 500) do |doc_id, score|
-            doc = f_idx[doc_id]
-            results << doc[:id]
+            if use_proxy?
+              results << DocumentProxy.new(f_idx[doc_id])
+            else
+              results << f_idx[doc_id][:id]
+            end
           end
         end
+        results
+      end
+      
+      def search(classname, query, options = {})
+        results = ferret_search(query)
         return SearchResults.new(0, results) if results.empty?
 
         options.merge!( :order => "field(id,#{results.join(',')})", :conditions => { :id => results } )
